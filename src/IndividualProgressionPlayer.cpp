@@ -1,4 +1,7 @@
 #include "IndividualProgression.h"
+#include "LFG.h"
+#include "LFGMgr.h"
+#include "Log.h"
 #include "naxxramas_40.h"
 #include "Spell.h"
 
@@ -1373,9 +1376,89 @@ public:
 
 };
 
+class IndividualPlayerProgression_LFGScript : public GlobalScript
+{
+private:
+    static bool ApplyStageGate(Player* player, uint8 playerStage, uint32& lockData, lfg::LFGDungeonData const* dungeon, ProgressionState requiredStage, char const* reason)
+    {
+        if (lockData || !player || !dungeon || !sIndividualProgression->enabled)
+            return false;
+
+        if (sIndividualProgression->hasPassedProgression(player, requiredStage))
+            return false;
+
+        lockData = lfg::LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+
+        if (sIndividualProgression->DebugLFG)
+        {
+            LOG_INFO("module",
+                "IndividualProgression LFG lock: player='{}' guid={} dungeonId={} mapId={} requiredStage={} playerStage={} reason='{}'",
+                player->GetName(), player->GetGUID().ToString(), dungeon->id, dungeon->map, uint8(requiredStage), playerStage, reason);
+        }
+
+        return true;
+    }
+
+public:
+    IndividualPlayerProgression_LFGScript() : GlobalScript("IndividualProgression_LFGScript") { }
+
+    void OnInitializeLockedDungeons(Player* player, uint8& /*level*/, uint32& lockData, lfg::LFGDungeonData const* dungeon) override
+    {
+        if (!sIndividualProgression->enabled || lockData || !player || !player->IsInWorld() || !dungeon)
+            return;
+
+        if (!sIndividualProgression->isNormalAccount(player))
+            return;
+
+        uint8 const playerStage = sIndividualProgression->GetPlayerProgressionFromQuests(player);
+        uint32 const dungeonMap = dungeon->map;
+
+        // Keep launch-TBC dungeons visible at stage 8 while gating post-launch tiers.
+        if ((dungeonMap == MAP_COILFANG_SERPENTSHRINE_CAVERN || dungeonMap == MAP_TEMPEST_KEEP) &&
+            ApplyStageGate(player, playerStage, lockData, dungeon, PROGRESSION_TBC_TIER_1, "SSC/TK gated until stage 9"))
+            return;
+
+        if ((dungeonMap == MAP_THE_BATTLE_FOR_MOUNT_HYJAL || dungeonMap == MAP_BLACK_TEMPLE) &&
+            ApplyStageGate(player, playerStage, lockData, dungeon, PROGRESSION_TBC_TIER_2, "Hyjal/BT gated until stage 10"))
+            return;
+
+        if (dungeonMap == MAP_ZUL_AMAN &&
+            ApplyStageGate(player, playerStage, lockData, dungeon, PROGRESSION_TBC_TIER_3, "ZA gated until stage 11"))
+            return;
+
+        if ((dungeonMap == MAP_MAGISTERS_TERRACE || dungeonMap == MAP_THE_SUNWELL) &&
+            ApplyStageGate(player, playerStage, lockData, dungeon, PROGRESSION_TBC_TIER_4, "MGT/Sunwell gated until stage 12"))
+            return;
+
+        // Stage < 13: block WotLK random buckets and all Northrend LFG maps.
+        if (!lockData && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
+        {
+            bool const isWotlkRandom =
+                dungeon->id == RDF_WRATH_OF_THE_LICH_KING ||
+                dungeon->id == RDF_WRATH_OF_THE_LICH_KING_HEROIC;
+
+            bool const isNorthrendContent = dungeon->expansion >= 2 || dungeonMap == MAP_NORTHREND;
+
+            if (isWotlkRandom || isNorthrendContent)
+            {
+                lockData = lfg::LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+
+                if (sIndividualProgression->DebugLFG)
+                {
+                    LOG_INFO("module",
+                        "IndividualProgression LFG lock: player='{}' guid={} dungeonId={} mapId={} requiredStage={} playerStage={} reason='{}'",
+                        player->GetName(), player->GetGUID().ToString(), dungeon->id, dungeon->map, uint8(PROGRESSION_TBC_TIER_5), playerStage,
+                        isWotlkRandom ? "WotLK random bucket gated until stage 13" : "Northrend dungeon gated until stage 13");
+                }
+            }
+        }
+    }
+};
+
 void AddSC_mod_individual_progression_player()
 {
     new IndividualPlayerProgression();
+    new IndividualPlayerProgression_LFGScript();
     new IndividualPlayerProgression_GroupScript();
     new IndividualPlayerProgression_AccountScript();
     new IndividualPlayerProgression_UnitScript();

@@ -911,6 +911,7 @@ private:
         sIndividualProgression->VanillaPvpTitlesEarnPostVanilla = sConfigMgr->GetOption<bool>("IndividualProgression.VanillaPvpEarnTitlesAfterVanilla", false);
         sIndividualProgression->BotAccountsEarnPvPTitles = sConfigMgr->GetOption<bool>("IndividualProgression.BotAccountsEarnPvPTitles", false);
         sIndividualProgression->DisableRDF = sConfigMgr->GetOption<bool>("IndividualProgression.DisableRDF", false);
+        sIndividualProgression->DebugLFG = sConfigMgr->GetOption<bool>("IndividualProgression.DebugLFG", false);
         sIndividualProgression->DisableQuestMarkers = sConfigMgr->GetOption<bool>("IndividualProgression.DisableQuestMarkers", true);
         sIndividualProgression->MaxMonsterSight = sConfigMgr->GetOption<bool>("IndividualProgression.MaxMonsterSight", true);
         sIndividualProgression->BotOnlyAdjustments = sConfigMgr->GetOption<bool>("IndividualProgression.BotOnlyAdjustments", false);

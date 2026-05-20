@@ -200,6 +200,16 @@ IndividualProgression.DisableQuestMarkers = 1
 #
 IndividualProgression.DisableRDF = 0
 
+# IndividualProgression.DebugLFG
+#
+#        Description: Enable extra logging for Individual Progression LFG locks.
+#                     Logs player name, dungeon id/map id, required stage and player stage when a lock is applied.
+#
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+IndividualProgression.DebugLFG = 0
+
 # IndividualProgression.MaxMonsterSight
 #
 #        Description: Enable or disable Max Monster Sight.
