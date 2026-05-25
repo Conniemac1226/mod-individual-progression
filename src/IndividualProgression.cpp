@@ -702,7 +702,6 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 
     TeamId teamId = player->GetTeamId(true);
     uint32 kills = player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
-    uint16 playerGUID = player->GetGUID().GetCounter();
     const uint32 PVP_QUEST = 66100;
 
     IppPvPTitles const pvpTitlesList[14] =
@@ -751,46 +750,24 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 		}
 	}
 
-	for (int8_t i = 13; i > -1; --i)
+    // Keep this idempotent: do not delete achievements here, only ensure missing
+    // hidden PvP quest markers are granted once up to the current highest rank.
+    if (highestRank < 0)
+        return;
+
+    for (uint8 questIndex = 1; questIndex <= uint8(highestRank + 1); ++questIndex)
     {
-		uint32_t achievementId = AchievementData[i].TitleId[teamId];
-
-		if (highestRank == i || !player->HasAchieved(achievementId))
-			continue;
-
-		RemovePlayerAchievement(playerGUID, achievementId);
-    }
-
-	// remove all hidden pvp quests
-    for (uint8 i = 1; i <= 14; ++i)
-    {
-        uint32 questId = PVP_QUEST + i;
-
+        uint32 questId = PVP_QUEST + questIndex;
         if (player->GetQuestStatus(questId) == QUEST_STATUS_REWARDED)
-            player->RemoveRewardedQuest(questId);
-    }
+            continue;
 
-    uint8 i = 1;
+        Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
+        if (!quest)
+            continue;
 
-    // add hidden pvp quests
-    for (IppPvPTitles title : pvpTitlesList)
-    {
-        if (player->HasTitle(title.TitleId))
-        {
-		    for (uint8 j = 1; j <= i; ++j)
-            {
-                uint32 questId = PVP_QUEST + j;
-                Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
-
-                if (quest)
-                {
-                    player->AddQuest(quest, nullptr);
-                    player->CompleteQuest(questId);
-                    player->RewardQuest(quest, 0, player, false, false);
-                }
-            }
-        }
-		++i;
+        player->AddQuest(quest, nullptr);
+        player->CompleteQuest(questId);
+        player->RewardQuest(quest, 0, player, false, false);
     }
 }
 
