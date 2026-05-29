@@ -810,7 +810,9 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
         {
             if (kills >= title.RequiredKills)
             {
-                player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
+                // Set the title only when newly earned to avoid re-triggering achievement popups.
+                if (!player->HasTitle(title.TitleId))
+                    player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
                 highestTitle = title.TitleId;
 					
                 constexpr int ALLIANCE_PVP_RANK_OFFSET = 4; // rank 1-4 are not used, need to add 4 to align with rank 1 = title ID 5
