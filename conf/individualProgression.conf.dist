@@ -214,7 +214,7 @@ IndividualProgression.DebugLFG = 0
 #
 #        Description: Enable or disable Max Monster Sight.
 #                     The AC default setting is 50 yards. Enabling this will increase the range to 80 yards.
-#                     The reason behind this are the tower and bunker archers in Alterac Valley. 
+#                     The reason behind this are the tower and bunker archers in Alterac Valley.
 #                     This does NOT effect aggro range.
 #
 #        Default:     1 - Enabled
@@ -464,6 +464,19 @@ IndividualProgression.BotAccountsRegex = "^RNDBOT.*"
 #
 IndividualProgression.ExcludedAccountsRegex = ""
 
+# IndividualProgression.EnableAllSpellRanks
+#
+#        Description: Enable this to allow all spell ranks to be cast during WotLK.
+#                     All spell ranks had the same % mana cost during WotLK, there was no reason to cast lower ranks of spells.
+#                     By default Individual Progression will block vanilla and tbc ranks of spells after the player progresses to WotLK.
+#                     This is done because if patch-V is used these vanilla and tbc spells will have their static mana cost restored.
+#                     They should not exist during WotLK. But if you want them to be available anyways, you can enable this config option.
+#
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+IndividualProgression.EnableAllSpellRanks = 0
+
 # IndividualProgression.EnableSetRepCommand
 #
 #        Description: Enable the .ip setrep command for normal AND gm accounts
@@ -493,7 +506,7 @@ IndividualProgression.LimitedSetRepCommand = 1
 #
 #        Description: This is a list of faction ids that the player can share with other characters on their account.
 #                     EnableSetRepCommand needs to be enabled.
-#                     Valid faction ids are: 
+#                     Valid faction ids are:
 #                     - vanilla = 59|270|349|509|510|529|576|589|609|729|730|749|889|890|909|910
 #                     - tbc     = 922|932|933|934|935|941|942|946|947|967|970|978|989|990|1011|1012|1015|1031|1038|1077
 #                     - wotlk   = 1037|1052|1073|1090|1091|1094|1098|1119|1124|1156

@@ -78,7 +78,7 @@ public:
             sIndividualProgression->AwardEarnedVanillaPvpTitles(player);
             sIndividualProgression->CleanUpVanillaPvpTitles(player);
         }
-        
+
         sIndividualProgression->CheckAdjustments(player);
     }
 
@@ -191,6 +191,9 @@ public:
             return;
 
         if (sIndividualProgression->isBotAccount(player)) // bots don't cast lower ranks of spells
+            return;
+
+        if (sIndividualProgression->EnableAllSpellRanks)
             return;
 
         if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) || player->GetLevel() < 70) // no need to check spells if player is not in WotlK
@@ -1148,11 +1151,11 @@ public:
                 }
             }
         }
-        
+
         if (killed->GetCreatureTemplate()->rank > CREATURE_ELITE_NORMAL)
         {
             Group* group = killer->GetGroup();
-            
+
             if (killed->GetEntry() == COLOSSUS_ZORA || killed->GetEntry() == COLOSSUS_REGAL || killed->GetEntry() == COLOSSUS_ASHI)
             {
                 // no group
@@ -1161,8 +1164,8 @@ public:
                 else if (killed->GetEntry() == COLOSSUS_REGAL)
                     killer->CompleteQuest(QUEST_COLOSSUS_REGAL);
                 else if (killed->GetEntry() == COLOSSUS_ASHI)
-                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);    
-               
+                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);
+
                 if (group)
                 {
                     for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
@@ -1271,7 +1274,7 @@ public:
         bool accountNameFound = AccountMgr::GetName(accountId, accountName);
         std::regex botAccountsRegex(sIndividualProgression->botAccountsRegex);
         std::regex excludedAccountsRegex(sIndividualProgression->excludedAccountsRegex);
-  
+
         if (accountNameFound && (std::regex_match(accountName, botAccountsRegex) || std::regex_match(accountName, excludedAccountsRegex)))
             return true;
 
