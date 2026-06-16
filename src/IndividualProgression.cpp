@@ -46,6 +46,76 @@ bool IndividualProgression::isBeforeProgression(Player* player, ProgressionState
     return sIndividualProgression->GetPlayerProgressionFromQuests(player) < state;
 }
 
+bool IndividualProgression::isDungeonLockedByProgression(Player* player, uint32 mapid)
+{
+    if (!enabled || !player || !player->IsInWorld() || player->IsGameMaster() || !isNormalAccount(player))
+        return false;
+
+    if (mapid == MAP_BLACKWING_LAIR && !hasPassedProgression(player, PROGRESSION_MOLTEN_CORE))
+        return true;
+
+    if (mapid == MAP_ZUL_GURUB)
+        return GetPlayerProgressionFromQuests(player) < static_cast<ProgressionState>(RequiredZulGurubProgression);
+
+    if (mapid == MAP_AHN_QIRAJ_TEMPLE && !hasPassedProgression(player, PROGRESSION_PRE_AQ))
+        return true;
+
+    if (mapid == MAP_RUINS_OF_AHN_QIRAJ && !hasPassedProgression(player, PROGRESSION_PRE_AQ))
+        return true;
+
+    if (mapid == MAP_ZUL_AMAN)
+        return GetPlayerProgressionFromQuests(player) < static_cast<ProgressionState>(RequiredZulAmanProgression);
+
+    if (mapid == MAP_TEMPEST_KEEP && !hasPassedProgression(player, PROGRESSION_TBC_TIER_1))
+        return true;
+
+    if (mapid == MAP_COILFANG_SERPENTSHRINE_CAVERN && !hasPassedProgression(player, PROGRESSION_TBC_TIER_1))
+        return true;
+
+    if (mapid == MAP_THE_BATTLE_FOR_MOUNT_HYJAL && !hasPassedProgression(player, PROGRESSION_TBC_TIER_2))
+        return true;
+
+    if (mapid == MAP_BLACK_TEMPLE && !hasPassedProgression(player, PROGRESSION_TBC_TIER_2))
+        return true;
+
+    if (mapid == MAP_MAGISTERS_TERRACE && !hasPassedProgression(player, PROGRESSION_TBC_TIER_4))
+        return true;
+
+    if (mapid == MAP_THE_SUNWELL && !hasPassedProgression(player, PROGRESSION_TBC_TIER_4))
+        return true;
+
+    if (mapid == MAP_ULDUAR && !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_1))
+        return true;
+
+    if ((mapid == MAP_TRIAL_OF_THE_CHAMPION || mapid == MAP_TRIAL_OF_THE_CRUSADER) &&
+        !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_2))
+        return true;
+
+    if ((mapid == MAP_ICECROWN_CITADEL || mapid == MAP_THE_FORGE_OF_SOULS) &&
+        !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3))
+        return true;
+
+    if (mapid == MAP_THE_RUBY_SANCTUM && !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_4))
+        return true;
+
+    InstanceTemplate const* instanceTemplate = sObjectMgr->GetInstanceTemplate(mapid);
+    if (!instanceTemplate)
+        return false;
+
+    if (instanceTemplate->Parent == MAP_OUTLAND && !hasPassedProgression(player, PROGRESSION_PRE_TBC))
+        return true;
+
+    if (instanceTemplate->Parent == MAP_NORTHREND && mapid != MAP_NAXXRAMAS &&
+        !hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
+        return true;
+
+    if (instanceTemplate->Parent == MAP_NORTHREND && mapid == MAP_NAXXRAMAS && player->GetLevel() <= 70 &&
+        (!isAttuned(player) || hasPassedProgression(player, PROGRESSION_TBC_TIER_5)))
+        return true;
+
+    return false;
+}
+
 void IndividualProgression::UpdateProgressionState(Player* player, ProgressionState newState) const
 {
     if (!enabled || !newState || !player || !player->IsInWorld())
@@ -984,8 +1054,25 @@ public:
     }
 };
 
+class IndividualPlayerProgression_GlobalScript : public GlobalScript
+{
+public:
+    IndividualPlayerProgression_GlobalScript() : GlobalScript("IndividualProgression_GlobalScript") { }
+
+    void OnInitializeLockedDungeons(Player* player, uint8& /*level*/, uint32& lockData,
+                                    lfg::LFGDungeonData const* dungeon) override
+    {
+        if (!dungeon || dungeon->type == lfg::LFG_TYPE_RANDOM)
+            return;
+
+        if (sIndividualProgression->isDungeonLockedByProgression(player, dungeon->map))
+            lockData = lfg::LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+    }
+};
+
 // Add all scripts in one
 void AddSC_mod_individual_progression()
 {
+    new IndividualPlayerProgression_GlobalScript();
     new IndividualPlayerProgression_WorldScript();
 }
