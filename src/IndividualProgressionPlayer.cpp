@@ -1203,31 +1203,6 @@ public:
         return true;
     }
 
-    void OnPlayerMapChanged(Player* player) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld())
-            return;
-
-        if (sIndividualProgression->isNormalAccount(player))
-            sIndividualProgression->checkIPProgression(player);
-
-        if (!sIndividualProgression->isBotAccount(player) || sIndividualProgression->BotAccountsEarnPvPTitles)
-        {
-            sIndividualProgression->AwardEarnedVanillaPvpTitles(player);
-            sIndividualProgression->CleanUpVanillaPvpTitles(player);
-        }
-
-        sIndividualProgression->CheckAdjustments(player);
-    }
-
-    void OnPlayerUpdateZone(Player* player, uint32 /*newZone*/, uint32 newArea) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld() || !newArea)
-            return;
-
-        sIndividualProgression->checkIPPhasing(player, newArea);
-    }
-
     void OnPlayerUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
     {
         if (!player || !player->IsInWorld() || !newArea || !oldArea)
