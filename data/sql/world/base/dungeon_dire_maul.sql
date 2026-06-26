@@ -4,7 +4,7 @@ SET @WPID    := 6530000;
 
 -- Dusty Tomes
 DELETE FROM `gameobject` WHERE `id` = 179548;
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`,
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, 
 `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `VerifiedBuild`, `Comment`) VALUES
 --
 (@OGUID+1, 179548, 429, 0, 0, 1, 1, 4.36356, -436.696, 16.4123, 0.995107, 0, 0, 0.477277, 0.878753, 7200, 255, 1, '', 0, NULL),
@@ -20,7 +20,7 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 (@OGUID+11, 179548, 429, 0, 0, 1, 1, -86.3983, 569.308, 28.6079, 1.78023, 0, 0, 0, 1, 7200, 255, 1, '', 0, NULL);
 
 DELETE FROM `pool_gameobject` WHERE `pool_entry` IN (601019);
-INSERT INTO `pool_gameobject` (`guid`, `pool_entry`, `chance`, `description`) VALUES
+INSERT INTO `pool_gameobject` (`guid`, `pool_entry`, `chance`, `description`) VALUES 
 (@OGUID+1,  601019, 0, 'A Dusty Tome'),
 (@OGUID+2,  601019, 0, 'A Dusty Tome'),
 (@OGUID+3,  601019, 0, 'A Dusty Tome'),
@@ -34,7 +34,7 @@ INSERT INTO `pool_gameobject` (`guid`, `pool_entry`, `chance`, `description`) VA
 (@OGUID+11, 601019, 0, 'A Dusty Tome');
 
 DELETE FROM `pool_template` WHERE `entry` IN (601019);
-INSERT INTO `pool_template` (`entry`, `max_limit`, `description`) VALUES
+INSERT INTO `pool_template` (`entry`, `max_limit`, `description`) VALUES 
 (601019, 1, 'A Dusty Tome - Dire Maul');
 
 -- fix quest POI and Quest Completion Logs
@@ -62,15 +62,15 @@ UPDATE `quest_template` SET `QuestCompletionLog` = 'Return to the Athenaeum in D
 /* ---- Dire Maul North ----- */
 
 /* smart scripts */
-UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN
-(11441, 11444, 11445, 11448, 11450, 11501, 11859, 13036, 13160, 14321, 14322, 14323, 14325, 14326);
-DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN
-(11441, 11444, 11445, 11448, 11450, 11501, 11859, 13036, 13160, 14321, 14322, 14323, 14325, 14326);
+UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN 
+(11441, 11444, 11445, 11448, 11450, 11501, 11859, 13036, 13160, 14321, 14322, 14323, 14326);
+DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN 
+(11441, 11444, 11445, 11448, 11450, 11501, 11859, 13036, 13160, 14321, 14322, 14323, 14326);
 
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
-`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
+`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
 --
 (11441, 0, 0, 0, 4, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,                             'Gordok Brute - On Aggro - Say Line 0'),
 (11441, 0, 1, 0, 0, 0, 100, 0, 8900, 17900, 6200, 16400, 0, 0, 11, 18072, 0, 0, 0, 0, 0, 21, 10, 0, 0, 0, 0, 0, 0, 0,       'Gordok Brute - Within 0-10 Range - Cast Uppercut'),
@@ -215,45 +215,45 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (1432502, 9, 7, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 67, 1, 2500, 2500, 0, 0, 100, 1, 0, 0, 0, 0, 0, 0, 0, 0,            'Script9 - Captain Kromcrush - Create Timed Event');
 
 -- fix 3 Gordok Mastiff patrols
-DELETE FROM `creature` WHERE `guid` IN
-(248093, 248094, 248095, 248096, 248097, 248098, 248099, 248100, 248101, 248106, 248107, 248108, 248131, 248132,
+DELETE FROM `creature` WHERE `guid` IN 
+(248093, 248094, 248095, 248096, 248097, 248098, 248099, 248100, 248101, 248106, 248107, 248108, 248131, 248132, 
 248135, 248136, 248137, 248138, 248145, 248146, 248147, 248155, 248163, 248164, 248171, 248176, 248179, 248180, 248186); -- 248155, 248186, 248101 (not used anymore)
 
-INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`,
+INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, 
 `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES
 --
-(248093, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 346.936, -43.3005, -25.6162, 1.12652,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248094, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 341.746, -30.117, -25.1938, 3.12414,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248095, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 352.51, -40.1966, -25.5735, 1.49486,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248096, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 349.138, -36.2457, -25.3775, 0.750492, 7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248093, 13036, 429, 0, 0, 1, 1, 0, 346.936, -43.3005, -25.6162, 1.12652,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248094, 13036, 429, 0, 0, 1, 1, 0, 341.746, -30.117, -25.1938, 3.12414,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248095, 13036, 429, 0, 0, 1, 1, 0, 352.51, -40.1966, -25.5735, 1.49486,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248096, 13036, 429, 0, 0, 1, 1, 0, 349.138, -36.2457, -25.3775, 0.750492, 7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
 --
-(248097, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 335.31, -54.8641, -25.8178, 1.0472,    7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248098, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 348.75, -69.83, -25.79, 0.51,          7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248099, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 340.09, -71.9, -25.56, 1.28,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248100, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 341.223, -61.7868, -25.4697, 2.46091,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248097, 13036, 429, 0, 0, 1, 1, 0, 335.31, -54.8641, -25.8178, 1.0472,    7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248098, 13036, 429, 0, 0, 1, 1, 0, 348.75, -69.83, -25.79, 0.51,          7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248099, 13036, 429, 0, 0, 1, 1, 0, 340.09, -71.9, -25.56, 1.28,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248100, 13036, 429, 0, 0, 1, 1, 0, 341.223, -61.7868, -25.4697, 2.46091,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
 --
-(248106, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 371.896, -38.1052, -24.8836, 1.94734,  7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 1
-(248107, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 371.063, -40.3972, -24.9856, 1.99446,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
-(248108, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 374.062, -39.0447, -24.8156, 1.96305,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248106, 13036, 429, 0, 0, 1, 1, 0, 371.896, -38.1052, -24.8836, 1.94734,  7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 1
+(248107, 13036, 429, 0, 0, 1, 1, 0, 371.063, -40.3972, -24.9856, 1.99446,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248108, 13036, 429, 0, 0, 1, 1, 0, 374.062, -39.0447, -24.8156, 1.96305,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
 --
-(248131, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 377.503, -55.9295, -24.001, 1.90798,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248132, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 383.881, -61.6908, -23.3481, 1.77446,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248163, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 382.07, -52.9229, -23.7786, 1.77446,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248164, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 387.03, -55.8076, -23.3126, 1.66293,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248131, 13036, 429, 0, 0, 1, 1, 0, 377.503, -55.9295, -24.001, 1.90798,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248132, 13036, 429, 0, 0, 1, 1, 0, 383.881, -61.6908, -23.3481, 1.77446,  7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248163, 13036, 429, 0, 0, 1, 1, 0, 382.07, -52.9229, -23.7786, 1.77446,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248164, 13036, 429, 0, 0, 1, 1, 0, 387.03, -55.8076, -23.3126, 1.66293,   7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
 --
-(248135, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 412.386, -46.1902, -22.9007, 2.1593,   7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 2
-(248136, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 417.902, -49.2018, -23.5564, 2.02571,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
-(248137, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 413.741, -41.0225, -23.4027, 2.04142,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
-(248138, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 418.952, -43.809, -23.4354, 1.89691,   7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248135, 13036, 429, 0, 0, 1, 1, 0, 412.386, -46.1902, -22.9007, 2.1593,   7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 2
+(248136, 13036, 429, 0, 0, 1, 1, 0, 417.902, -49.2018, -23.5564, 2.02571,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248137, 13036, 429, 0, 0, 1, 1, 0, 413.741, -41.0225, -23.4027, 2.04142,  7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248138, 13036, 429, 0, 0, 1, 1, 0, 418.952, -43.809, -23.4354, 1.89691,   7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
 --
-(248145, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 682.682, 454.001, 29.4598, 1.83,       7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 3
-(248146, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 684.255, 457.807, 29.4601, 1.83,       7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
-(248147, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 688.389, 454.676, 29.4662, 1.83,       7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248145, 13036, 429, 0, 0, 1, 1, 0, 682.682, 454.001, 29.4598, 1.83,       7200, 0, 1, 3758, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- patrol 3
+(248146, 13036, 429, 0, 0, 1, 1, 0, 684.255, 457.807, 29.4601, 1.83,       7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(248147, 13036, 429, 0, 0, 1, 1, 0, 688.389, 454.676, 29.4662, 1.83,       7200, 0, 0, 3758, 0, 0, 0, 0, 0, '', 0, 0, NULL),
 --
-(248171, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 416.32, 16.09, -24.94, 3.09,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248176, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 420.38, 22.55, -24.86, 2.52,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248179, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 410.57, 24.82, -25.16, 2.22,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(248180, 13036, 0, 0, 429, 0, 0, 1, 1, 0, 417.935, 27.8456, -25.04, 3.39019,     7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL);
+(248171, 13036, 429, 0, 0, 1, 1, 0, 416.32, 16.09, -24.94, 3.09,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248176, 13036, 429, 0, 0, 1, 1, 0, 420.38, 22.55, -24.86, 2.52,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248179, 13036, 429, 0, 0, 1, 1, 0, 410.57, 24.82, -25.16, 2.22,           7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(248180, 13036, 429, 0, 0, 1, 1, 0, 417.935, 27.8456, -25.04, 3.39019,     7200, 3, 0, 3758, 0, 1, 0, 0, 0, '', 0, 0, NULL);
 
 DELETE FROM `creature_formations` WHERE `leaderGUID` IN (248106, 248135, 248145);
 INSERT INTO `creature_formations` (`leaderGUID`, `memberGUID`, `dist`, `angle`, `groupAI`, `point_1`, `point_2`) VALUES
@@ -271,13 +271,13 @@ INSERT INTO `creature_formations` (`leaderGUID`, `memberGUID`, `dist`, `angle`, 
 (248145, 248147, 3, 225, 515, 0, 0);
 
 DELETE FROM `creature_addon` WHERE `guid` IN (248106, 248135, 248145);
-INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES
+INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
 (248106, 2481060, 0, 0, 0, 0, 0, NULL),
 (248135, 2481350, 0, 0, 0, 0, 0, NULL),
 (248145, 2481450, 0, 0, 0, 0, 0, NULL);
 
 DELETE FROM `waypoint_data` WHERE `id` IN (2481060, 2481350, 2481450);
-INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES
+INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES 
 --
 (2481060, 1, 366.174, -33.3632, -24.9979, 2.33611, 0, 0, 0, 100, 0),
 (2481060, 2, 353.044, -10.6431, -24.9653, 2.52462, 0, 0, 0, 100, 0),
@@ -344,15 +344,15 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 /* ---- Dire Maul West -----  */
 
 /* smart scripts */
-UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN
+UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN 
 (11458, 11459, 11466, 11467, 11469, 11470, 11471, 11472, 11473, 11475, 11476, 11477, 11480, 11483, 11484, 11486, 11487, 11488, 11489, 11496, 14303, 14308, 14398, 14399, 14400, 14566);
-DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN
+DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN 
 (11458, 11459, 11466, 11467, 11469, 11470, 11471, 11472, 11473, 11475, 11476, 11477, 11480, 11483, 11484, 11486, 11487, 11488, 11489, 11496, 14303, 14308, 14398, 14399, 14400, 14566);
 
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
-`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
+`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
 --
 (11458, 0, 0, 0, 2, 0, 100, 1, 0, 50, 0, 0, 0, 0, 11, 22693, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                 'Petrified Treant - Between 0-50% Health - Cast Harden Skin (No Repeat)'),
 (11459, 0, 0, 0, 0, 0, 100, 0, 4000, 6000, 6000, 18000, 0, 0, 11, 5568, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,      'Ironbark Protector - In Combat - Cast Trample'),
@@ -462,61 +462,61 @@ UPDATE `creature_template` SET `lootid` = 0 WHERE `entry` = 14370;
 UPDATE `creature_template_model` SET `DisplayScale` = 0.25  WHERE `CreatureID` = 14370;
 
 -- fix waypoints
-DELETE FROM `creature` WHERE `id1` IN (11459, 11484, 11488, 14308);
+DELETE FROM `creature` WHERE `id` IN (11459, 11484, 11488, 14308);
 DELETE FROM `creature` WHERE `guid` IN (247932, 247933); -- unused Eldreth Phantasm guids
 DELETE FROM `creature` WHERE `guid` IN (247915, 247925);
 DELETE FROM `creature` WHERE `guid` IN (@CGUID+21, @CGUID+22, @CGUID+23, @CGUID+24, @CGUID+25, @CGUID+26);
 
-INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`,
+INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, 
 `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES
 --
-(247820, 11459, 0, 0, 429, 0, 0, 1, 1, 0, -92.0732, 344.012, -4.98579, 4.65212,     7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- Ironbark Protector
-(247821, 11459, 0, 0, 429, 0, 0, 1, 1, 0, -81.8398, 331.385, -4.98577, 0.00806141,  7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247822, 11459, 0, 0, 429, 0, 0, 1, 1, 0, -91.2542, 208.194, -4.98579, 0.000183582, 7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247823, 11459, 0, 0, 429, 0, 0, 1, 1, 0, 120.349, 208.974, -4.98579, 1.51911,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247826, 11459, 0, 0, 429, 0, 0, 1, 1, 0, 117.024, 341.161, -4.98576, 3.11795,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247827, 11459, 0, 0, 429, 0, 0, 1, 1, 0, 111.654, 331.099, -4.98691, 4.70273,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247828, 11459, 0, 0, 429, 0, 0, 1, 1, 0, 113.191, 220.718, -4.98579, 3.06752,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(247829, 11459, 0, 0, 429, 0, 0, 1, 1, 0, -83.6189, 221.455, -4.98577, 1.55063,     7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247820, 11459, 429, 0, 0, 1, 1, 0, -92.0732, 344.012, -4.98579, 4.65212,     7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL), -- Ironbark Protector
+(247821, 11459, 429, 0, 0, 1, 1, 0, -81.8398, 331.385, -4.98577, 0.00806141,  7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247822, 11459, 429, 0, 0, 1, 1, 0, -91.2542, 208.194, -4.98579, 0.000183582, 7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247823, 11459, 429, 0, 0, 1, 1, 0, 120.349, 208.974, -4.98579, 1.51911,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247826, 11459, 429, 0, 0, 1, 1, 0, 117.024, 341.161, -4.98576, 3.11795,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247827, 11459, 429, 0, 0, 1, 1, 0, 111.654, 331.099, -4.98691, 4.70273,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247828, 11459, 429, 0, 0, 1, 1, 0, 113.191, 220.718, -4.98579, 3.06752,      7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(247829, 11459, 429, 0, 0, 1, 1, 0, -83.6189, 221.455, -4.98577, 1.55063,     7200, 0, 1, 16704, 0, 2, 0, 0, 0, '', 0, 0, NULL),
 --
-(247915, 11473, 0, 0, 429, 0, 0, 1, 1, 0, 53.4167, 508.309, -23.3046, 1.5645,       7200, 0, 1, 6891, 6867, 2, 0, 0, 0, '', 0, 0, NULL), -- Eldreth Spectre
-(247925, 11473, 0, 0, 429, 0, 0, 1, 1, 0, -44.4043, 601.338, -23.3039, 4.71541,     7200, 0, 1, 6891, 6867, 2, 0, 0, 0, '', 0, 0, NULL),
+(247915, 11473, 429, 0, 0, 1, 1, 0, 53.4167, 508.309, -23.3046, 1.5645,       7200, 0, 1, 6891, 6867, 2, 0, 0, 0, '', 0, 0, NULL), -- Eldreth Spectre
+(247925, 11473, 429, 0, 0, 1, 1, 0, -44.4043, 601.338, -23.3039, 4.71541,     7200, 0, 1, 6891, 6867, 2, 0, 0, 0, '', 0, 0, NULL),
 --
-(@CGUID+21, 11471, 0, 0, 429, 0, 0, 1, 1, 0, -14.1262, 556.353, -23.3048, 2.58788,  7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+22, 11475, 0, 0, 429, 0, 0, 1, 1, 0, -23.644, 555.536, -23.3048, 2.42687,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+23, 11475, 0, 0, 429, 0, 0, 1, 1, 0, -19.0653, 561.489, -23.3048, 2.46222,  7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+24, 11471, 0, 0, 429, 0, 0, 1, 1, 0, 24.3215, 555.272, -23.3048, 5.91641,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+25, 11475, 0, 0, 429, 0, 0, 1, 1, 0, 30.4088, 549.859, -23.3048, 5.88342,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+26, 11475, 0, 0, 429, 0, 0, 1, 1, 0, 33.0906, 556.943, -23.3048, 5.5889,    7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+21, 11471, 429, 0, 0, 1, 1, 0, -14.1262, 556.353, -23.3048, 2.58788,  7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+22, 11475, 429, 0, 0, 1, 1, 0, -23.644, 555.536, -23.3048, 2.42687,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+23, 11475, 429, 0, 0, 1, 1, 0, -19.0653, 561.489, -23.3048, 2.46222,  7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+24, 11471, 429, 0, 0, 1, 1, 0, 24.3215, 555.272, -23.3048, 5.91641,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+25, 11475, 429, 0, 0, 1, 1, 0, 30.4088, 549.859, -23.3048, 5.88342,   7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+26, 11475, 429, 0, 0, 1, 1, 0, 33.0906, 556.943, -23.3048, 5.5889,    7200, 5, 0, 8613, 0, 1, 0, 0, 0, '', 0, 0, NULL),
 --
-(@CGUID+1,  11484, 0, 0, 429, 0, 0, 1, 1, 0, 64.1088, 850.66, -24.5796, 3.54089,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+2,  11484, 0, 0, 429, 0, 0, 1, 1, 0, 72.168, 814.964, -24.5796, 3.17175,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+3,  11484, 0, 0, 429, 0, 0, 1, 1, 0, 67.3596, 774.314, -24.5802, 2.72639,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+4,  11484, 0, 0, 429, 0, 0, 1, 1, 0, 51.8217, 735.954, -24.5798, 2.44365,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+5,  11484, 0, 0, 429, 0, 0, 1, 1, 0, 17.9655, 716.301, -24.5796, 2.1256,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+6,  11484, 0, 0, 429, 0, 0, 1, 1, 0, -17.6352, 697.856, -24.5808, 1.72897,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+7,  11484, 0, 0, 429, 0, 0, 1, 1, 0, -56.2217, 702.373, -24.5915, 1.34805,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+8,  11484, 0, 0, 429, 0, 0, 1, 1, 0, -94.2593, 714.937, -24.5803, 1.0425,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+9,  11484, 0, 0, 429, 0, 0, 1, 1, 0, -123.166, 740.039, -24.5803, 0.711101, 7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+10, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -143.233, 772.507, -24.5802, 0.394555, 7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+11, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -151.746, 812.023, -24.5802, 6.25757,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+12, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -144.839, 850.961, -24.5802, 5.85702,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+13, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -123.805, 883.257, -24.5803, 5.49417,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+14, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -92.5066, 908.067, -24.5796, 5.23657,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+15, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -58.7163, 921.933, -24.5796, 4.76689,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+16, 11484, 0, 0, 429, 0, 0, 1, 1, 0, -20.9416, 925.498, -24.5802, 4.60271,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+17, 11484, 0, 0, 429, 0, 0, 1, 1, 0, 20.1434, 910.762, -24.5802, 4.13541,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
-(@CGUID+18, 11484, 0, 0, 429, 0, 0, 1, 1, 0, 46.989, 881.837, -24.5796, 3.74823,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+1,  11484, 429, 0, 0, 1, 1, 0, 64.1088, 850.66, -24.5796, 3.54089,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+2,  11484, 429, 0, 0, 1, 1, 0, 72.168, 814.964, -24.5796, 3.17175,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+3,  11484, 429, 0, 0, 1, 1, 0, 67.3596, 774.314, -24.5802, 2.72639,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+4,  11484, 429, 0, 0, 1, 1, 0, 51.8217, 735.954, -24.5798, 2.44365,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+5,  11484, 429, 0, 0, 1, 1, 0, 17.9655, 716.301, -24.5796, 2.1256,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+6,  11484, 429, 0, 0, 1, 1, 0, -17.6352, 697.856, -24.5808, 1.72897,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+7,  11484, 429, 0, 0, 1, 1, 0, -56.2217, 702.373, -24.5915, 1.34805,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+8,  11484, 429, 0, 0, 1, 1, 0, -94.2593, 714.937, -24.5803, 1.0425,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+9,  11484, 429, 0, 0, 1, 1, 0, -123.166, 740.039, -24.5803, 0.711101, 7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+10, 11484, 429, 0, 0, 1, 1, 0, -143.233, 772.507, -24.5802, 0.394555, 7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+11, 11484, 429, 0, 0, 1, 1, 0, -151.746, 812.023, -24.5802, 6.25757,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+12, 11484, 429, 0, 0, 1, 1, 0, -144.839, 850.961, -24.5802, 5.85702,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+13, 11484, 429, 0, 0, 1, 1, 0, -123.805, 883.257, -24.5803, 5.49417,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+14, 11484, 429, 0, 0, 1, 1, 0, -92.5066, 908.067, -24.5796, 5.23657,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+15, 11484, 429, 0, 0, 1, 1, 0, -58.7163, 921.933, -24.5796, 4.76689,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+16, 11484, 429, 0, 0, 1, 1, 0, -20.9416, 925.498, -24.5802, 4.60271,  7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+17, 11484, 429, 0, 0, 1, 1, 0, 20.1434, 910.762, -24.5802, 4.13541,   7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
+(@CGUID+18, 11484, 429, 0, 0, 1, 1, 0, 46.989, 881.837, -24.5796, 3.74823,    7200, 0, 1, 14594, 0, 2, 0, 0, 0, '', 0, 0, NULL),
 --
-(248034, 11488, 0, 0, 429, 0, 0, 1, 1, 1, -14.613, 542.093, 28.6039, 3.10576, 86400, 0, 1, 17094, 7302, 2, 0, 0, 0, '', 0, 0, NULL),   -- Illyanna Ravenoak
-(248036, 14308, 0, 0, 429, 0, 0, 1, 1, 0, -11.6649, 544.295, 28.6046, 3.1557, 86400, 0, 0, 15260, 0, 0, 0, 0, 0, '', 0, 0, NULL);      -- Ferra
+(248034, 11488, 429, 0, 0, 1, 1, 1, -14.613, 542.093, 28.6039, 3.10576, 86400, 0, 1, 17094, 7302, 2, 0, 0, 0, '', 0, 0, NULL),   -- Illyanna Ravenoak
+(248036, 14308, 429, 0, 0, 1, 1, 0, -11.6649, 544.295, 28.6046, 3.1557, 86400, 0, 0, 15260, 0, 0, 0, 0, 0, '', 0, 0, NULL);      -- Ferra
 
 DELETE FROM `creature_addon` WHERE `guid` IN (248013, 248015, 248016); -- unused Residual Monstrosity guids
 DELETE FROM `creature_addon` WHERE `guid` IN (247820, 247821, 247822, 247823, 247826, 247827, 247828, 247829);
-DELETE FROM `creature_addon` WHERE `guid` IN
+DELETE FROM `creature_addon` WHERE `guid` IN 
 (@CGUID+1, @CGUID+2, @CGUID+3, @CGUID+4, @CGUID+5, @CGUID+6, @CGUID+7, @CGUID+8, @CGUID+9, @CGUID+10, @CGUID+11, @CGUID+12, @CGUID+13, @CGUID+14, @CGUID+15, @CGUID+16, @CGUID+17, @CGUID+18);
 
-INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES
+INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
 --
 (247820, 2478200, 0, 0, 1, 0, 0, ''), -- Ironbark Protector
 (247821, 2478210, 0, 0, 1, 0, 0, ''),
@@ -547,11 +547,11 @@ INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `e
 (@CGUID+18, @WPID+180, 0, 0, 1, 0, 0, '');
 
 DELETE FROM `waypoint_data` WHERE `id` IN (2478200, 2478210, 2478220, 2478230, 2478260, 2478270, 2478280, 2478290, 2479150, 2479250, 2480340);
-DELETE FROM `waypoint_data` WHERE `id` IN
-(@WPID+10, @WPID+20, @WPID+30, @WPID+40, @WPID+50, @WPID+60, @WPID+70, @WPID+80, @WPID+90,
+DELETE FROM `waypoint_data` WHERE `id` IN 
+(@WPID+10, @WPID+20, @WPID+30, @WPID+40, @WPID+50, @WPID+60, @WPID+70, @WPID+80, @WPID+90, 
 @WPID+100, @WPID+110, @WPID+120, @WPID+130, @WPID+140, @WPID+150, @WPID+160, @WPID+170, @WPID+180);
 
-INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES
+INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES 
 --
 (2478200, 1, -92.0732, 344.012, -4.98579, 4.65212, 0, 0, 0, 100, 0),  -- Ironbark Protector 1
 (2478200, 2, -90.2285, 208.421, -4.98579, 6.24254, 0, 0, 0, 100, 0),
@@ -984,9 +984,9 @@ UPDATE `creature_template` SET `unit_flags` = 514, `flags_extra` = 2 WHERE `entr
 UPDATE `gameobject_template` SET `AIName`= 'SmartGameObjectAI' WHERE `entry` IN (179672, 179673, 179674);
 DELETE FROM `smart_scripts` WHERE `source_type` = 1 AND `entryorguid` IN (179672, 179673, 179674);
 DELETE FROM `smart_scripts` WHERE `source_type` = 9 AND `entryorguid` IN (17967200, 17967300, 17967400);
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
 `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 --
 (179672, 1, 0, 0, 70, 0, 100, 0, 2, 0, 0, 0, 0, 0, 80, 17967200, 2, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,             'Wheel of the Black March - On State Changed - Run Script'), -- reduce damage taken by 100
@@ -1091,9 +1091,9 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (14482, 14483, 14500, 14501, 14502, 14504, 14506);
 DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN (14482, 14483, 14500, 14501, 14502, 14504, 14506);
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
 `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 --
 (14482, 0, 0, 1, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 21, 100, 0, 0, 0, 0, 0, 0, 0,                  'Xorothian Imp - On Just Summoned - Start Attack'),
@@ -1137,9 +1137,9 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (14506, 0, 4, 0, 54, 0, 100, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                      'Lord Hel\'nurath - On Just Summoned - Say text 0');
 
 DELETE FROM `smart_scripts` WHERE `source_type` = 9 AND `entryorguid` IN (1450002);
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
 `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
 --
 (1450002, 9,  0, 0, 0, 0, 100, 512, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                                            'J\'eevee - Script - Say Line 4'),
@@ -1158,7 +1158,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (1450002, 9, 13, 0, 0, 0, 100, 512, 10000, 10000, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                                   'J\'eevee - Script - Set Invisible'),
 (1450002, 9, 14, 0, 0, 0, 100, 512, 0, 0, 0, 0, 0, 0, 2, 35, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                                           'J\'eevee - Script - Set Faction Friendly');
 
-DELETE FROM `creature_text` WHERE `CreatureID` IN (14500, 14506);
+DELETE FROM `creature_text` WHERE `CreatureID` IN (14500, 14506); 
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Language`, `Probability`, `Emote`, `Duration`, `Sound`, `BroadcastTextId`, `TextRange`, `comment`) VALUES
 --
 (14500, 0, 0, 'Ah, here we are! Well let\'s get to work, shall we...?', 12, 0, 100, 0, 0, 0, 9769, 0, 'J\'eevee'),
@@ -1225,7 +1225,7 @@ INSERT INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, 
 (8420, 110, 10, 14482, 1000000, 0, 24.4288, 802.138, -28.3785, 2.90904),   -- portal 10
 (8420, 110, 10, 14482, 1000000, 0, 2.0333, 863.479, -28.1891, 4.0243),     -- portal 13
 (8420, 110, 10, 14482, 1000000, 0, -62.9614, 873.05, -28.2525, 5.06888),   -- portal 16
---
+--	
 (8420, 130,  9, 99781, 1315, 0, 0, 0, 0, 0),                               -- 179670 = Warlock Mount Quest Symbol 2
 (8420, 135, 10, 14482, 1000000, 0, -101.031, 799.681, -28.4503, 0.150696), -- portal 2
 (8420, 135, 10, 14482, 1000000, 0, -60.041, 751.992, -28.2167, 1.22277),   -- portal 5
@@ -1314,8 +1314,8 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 -- fix locations Symbols and Dreadsteed Portal
 DELETE FROM `gameobject` WHERE `guid` BETWEEN 99774 AND 99783;
 DELETE FROM `gameobject` WHERE `guid` BETWEEN @OGUID+101 AND @OGUID+118;
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`,
-`rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `VerifiedBuild`, `Comment`) VALUES
+INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, 
+`rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `VerifiedBuild`, `Comment`) VALUES 
 --
 (99774, 179671, 429, 0, 0, 1, 1, -33.5439, 799.742, -29.5359, 2.00921, 0, 0, 0.84395, 0.536422, -900, 0, 1, '', 0, NULL), -- Quest Symbol
 (99775, 179670, 429, 0, 0, 1, 1, -27.8166, 804.138, -29.5359, 2.52128, 0, 0, 0.952286, 0.305207, -900, 0, 1, '', 0, NULL),
@@ -1352,15 +1352,15 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 /* ---- Dire Maul East ---- */
 
 /* smart scripts */
-UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN
+UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN 
 (11451, 11452, 11453, 11454, 11456, 11457, 11461, 11462, 11464, 11465, 11490, 13021, 13022, 13197, 13276, 13280, 13285, 14327, 14349);
-DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN
+DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN 
 (11451, 11452, 11453, 11454, 11456, 11457, 11461, 11462, 11464, 11465, 11490, 13021, 13022, 13197, 13276, 13280, 13285, 14327, 14349);
 
-INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`,
-`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`,
-`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`,
-`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
+`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
 --
 (11451, 0, 0, 0, 0, 0, 100, 0, 3000, 7000, 10000, 19000, 0, 0, 11, 9128, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,      'Wildspawn Satyr - In Combat - Cast Battle Shout'),
 (11451, 0, 1, 0, 9, 0, 100, 0, 0, 0, 6100, 8400, 0, 5, 11, 15580, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,             'Wildspawn Satyr - Within 0-5 Range - Cast Strike'),

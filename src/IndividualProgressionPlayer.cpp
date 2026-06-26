@@ -27,6 +27,9 @@ public:
 
         if (!sIndividualProgression->isNormalAccount(player)) // bot or exluded account
         {
+            if (sIndividualProgression->isBotAccount(player))
+                sIndividualProgression->UpdateRNDbotSpells(player); // give class spells to RNDbots that have been removed from trainers by IP.
+            
             if (player->GetLevel() <= 60)
                 sIndividualProgression->ForceUpdateProgressionState(player, static_cast<ProgressionState>(0));
             else if ((player->GetLevel() > 60) && (player->GetLevel() <= 70))
@@ -65,31 +68,6 @@ public:
         }
     }
 
-    void OnPlayerMapChanged(Player* player) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld())
-            return;
-
-        if (sIndividualProgression->isNormalAccount(player))
-            sIndividualProgression->checkIPProgression(player);
-
-        if (!sIndividualProgression->isBotAccount(player) || sIndividualProgression->BotAccountsEarnPvPTitles)
-        {
-            sIndividualProgression->AwardEarnedVanillaPvpTitles(player);
-            sIndividualProgression->CleanUpVanillaPvpTitles(player);
-        }
-
-        sIndividualProgression->CheckAdjustments(player);
-    }
-
-    void OnPlayerUpdateZone(Player* player, uint32 /*newZone*/, uint32 newArea) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld() || !newArea)
-            return;
-
-        sIndividualProgression->checkIPPhasing(player, newArea);
-    }
-
     void OnPlayerEquip(Player* player, Item* /*it*/, uint8 /*bag*/, uint8 /*slot*/, bool /*update*/) override
     {
         if (!player || !player->IsInWorld())
@@ -97,6 +75,15 @@ public:
 
         // exluded accounts should be effected by server nerfs as well
         sIndividualProgression->CheckAdjustments(player);
+    }
+
+    void OnPlayerLevelChanged(Player* player, uint8 /*oldLevel*/) override
+    {
+        if (!player || !player->IsInWorld())
+            return;
+
+        if (sIndividualProgression->isBotAccount(player))
+            sIndividualProgression->UpdateRNDbotSpells(player);
     }
 
     void OnPlayerResurrect(Player* player, float /*restore_percent*/, bool& /*applySickness*/) override
@@ -181,7 +168,7 @@ public:
 
         if (sIndividualProgression->EnableAllSpellRanks)
             return;
-
+        
         if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) || player->GetLevel() < 70) // no need to check spells if player is not in WotlK
             return;
 
@@ -1138,10 +1125,36 @@ public:
             }
         }
 
+        Group* group = killer->GetGroup();
+        
         if (killed->GetCreatureTemplate()->rank > CREATURE_ELITE_NORMAL)
-        {
-            Group* group = killer->GetGroup();
+        {       
+            if (sIndividualProgression->disableDefaultProgression)
+            {
+                bool CustomCreatureKilled = false;
+                
+                if (group)
+                {
+                    for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+                    {
+                        Player* member = itr->GetSource();
+                        if (!member || !sIndividualProgression->isNormalAccount(member))
+                            continue;
 
+                        if (sIndividualProgression->checkCustomKillProgression(killer, killed))
+                            CustomCreatureKilled = true;
+                    }
+                }
+                else // no group
+                {
+                    if (sIndividualProgression->checkCustomKillProgression(killer, killed)) 
+                        CustomCreatureKilled = true;
+                }
+
+                if (CustomCreatureKilled)
+                    return;
+            }
+   
             if (killed->GetEntry() == COLOSSUS_ZORA || killed->GetEntry() == COLOSSUS_REGAL || killed->GetEntry() == COLOSSUS_ASHI)
             {
                 // no group
@@ -1150,8 +1163,8 @@ public:
                 else if (killed->GetEntry() == COLOSSUS_REGAL)
                     killer->CompleteQuest(QUEST_COLOSSUS_REGAL);
                 else if (killed->GetEntry() == COLOSSUS_ASHI)
-                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);
-
+                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);    
+               
                 if (group)
                 {
                     for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
@@ -1168,11 +1181,10 @@ public:
                             member->CompleteQuest(QUEST_COLOSSUS_ASHI);
                     }
                 }
-
                 return;
             }
 
-            sIndividualProgression->checkKillProgression(killer, killed); // no group
+            uint32 ENTRY_KILLED = killed->GetEntry();
 
             if (group)
             {
@@ -1183,8 +1195,16 @@ public:
                         continue;
 
                     if (killer->IsAtLootRewardDistance(member))
-                        sIndividualProgression->checkKillProgression(member, killed);
+                    {
+                        if (!sIndividualProgression->hasCustomProgressionValue(ENTRY_KILLED))
+                            sIndividualProgression->checkKillProgression(member, killed);
+                    }
                 }
+            }
+            else // no group
+            {
+                if (!sIndividualProgression->hasCustomProgressionValue(ENTRY_KILLED))
+                    sIndividualProgression->checkKillProgression(killer, killed);
             }
         }
     }
@@ -1201,6 +1221,31 @@ public:
             return false;
 
         return true;
+    }
+
+    void OnPlayerMapChanged(Player* player) override
+    {
+        if (!sIndividualProgression->enabled || !player || !player->IsInWorld())
+            return;
+
+        if (sIndividualProgression->isNormalAccount(player))
+            sIndividualProgression->checkIPProgression(player);
+
+        if (!sIndividualProgression->isBotAccount(player) || sIndividualProgression->BotAccountsEarnPvPTitles)
+        {
+            sIndividualProgression->AwardEarnedVanillaPvpTitles(player);
+            sIndividualProgression->CleanUpVanillaPvpTitles(player);
+        }
+
+        sIndividualProgression->CheckAdjustments(player);
+    }
+
+    void OnPlayerUpdateZone(Player* player, uint32 /*newZone*/, uint32 newArea) override
+    {
+        if (!sIndividualProgression->enabled || !player || !player->IsInWorld() || !newArea)
+            return;
+
+        sIndividualProgression->checkIPPhasing(player, newArea);
     }
 
     void OnPlayerUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
@@ -1236,6 +1281,66 @@ public:
         sIndividualProgression->checkIPPhasing(player, newArea);
     }
 
+    bool OnPlayerCanEquipItem(Player* player, uint8 /*slot*/, uint16& /*dest*/, Item* pItem, bool /*swap*/, bool /*not_loading*/) override
+    {
+        if (!player || !pItem)
+            return false;
+
+        if (pItem->GetTemplate()->RequiredHonorRank == 0)
+            return true;
+
+        if (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) == 0) // value is 0 player login
+            return true;
+
+        switch (pItem->GetTemplate()->RequiredHonorRank)
+        {
+        case 5:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 5);
+            break;
+        case 6:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 6);
+            break;
+        case 7:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 7);
+            break;
+        case 8:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 8);
+            break;
+        case 9:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 9);
+            break;
+        case 10:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 10);
+            break;
+        case 11:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 11);
+            break;
+        case 12:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 12);
+            break;
+        case 13:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 13);
+            break;
+        case 14:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 14);
+            break;
+        case 15:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 15);
+            break;
+        case 16:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 16);
+            break;
+        case 17:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 17);
+            break;
+        case 18:
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 18);
+            break;
+        default:
+            break;
+        }
+        return true;
+    }
 };
 
 class IndividualPlayerProgression_AccountScript : public AccountScript
@@ -1260,22 +1365,24 @@ public:
         bool accountNameFound = AccountMgr::GetName(accountId, accountName);
         std::regex botAccountsRegex(sIndividualProgression->botAccountsRegex);
         std::regex excludedAccountsRegex(sIndividualProgression->excludedAccountsRegex);
-
+  
         if (accountNameFound && (std::regex_match(accountName, botAccountsRegex) || std::regex_match(accountName, excludedAccountsRegex)))
             return true;
 
         uint8 highestProgression = sIndividualProgression->GetAccountProgression(accountId);
-        if (charRace == RACE_DRAENEI || charRace == RACE_BLOODELF)
+        bool allowed = true;
+        
+        if ((charRace == RACE_DRAENEI || charRace == RACE_BLOODELF) && sIndividualProgression->tbcRacesProgressionLevel != 0)
         {
             if (highestProgression < sIndividualProgression->tbcRacesProgressionLevel)
-                return false;
+                allowed = false;
         }
-        else if (charClass == CLASS_DEATH_KNIGHT && sIndividualProgression->deathKnightProgressionLevel)
+        if (charClass == CLASS_DEATH_KNIGHT && sIndividualProgression->deathKnightProgressionLevel != 0)
         {
             if (highestProgression < sIndividualProgression->deathKnightProgressionLevel)
-                return false;
+                allowed = false;
         }
-        return true;
+        return allowed;
     }
 };
 

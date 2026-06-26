@@ -21,12 +21,15 @@ DELETE FROM `game_event_creature` WHERE `guid` IN
 (17676, 88155, 88156, 88158, 88159, 88160, 91798, 152022, 152023, 152026, 152027, 152028, 152029, 152030, 152031, 202335, 202336, 
 208486, 208487, 208488, 208489, 208491, 208492, 208494, 208496, 208498, 208499, 208500, 208501, 208503, 208504, 208506, 208508);
 
-DELETE FROM `creature`   WHERE `id1`   IN (32405, 32832, 32834);
+DELETE FROM `creature`   WHERE `id`   IN (32405, 32832, 32834);
 DELETE FROM `npc_vendor` WHERE `entry` IN (32405, 32832, 32834);
-DELETE FROM `creature` WHERE `guid` = 88156 AND `id1` IN (20278); -- Vixton Pinchwhistle
+DELETE FROM `creature` WHERE `guid` = 88156 AND `id` IN (20278); -- Vixton Pinchwhistle
 
 
 /* the following edits are temporary */
+
+-- remove pvp progression requirements to show pvp gear. added rank requirements back
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `ConditionTypeOrReference` = 8 AND `Comment` = "Vanilla PvP Ranked Gear (IPP)";
 
 -- remove vanilla AV landmines, default is no landmines
 SET @OGUID := 657000;
