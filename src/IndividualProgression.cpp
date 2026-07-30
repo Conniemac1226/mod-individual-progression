@@ -3,6 +3,8 @@
 */
 
 #include "IndividualProgression.h"
+#include "LFG.h"
+#include "Log.h"
 #include "naxxramas_40.h"
 #include "ReputationMgr.h"
 #include "PetDefines.h"
@@ -45,6 +47,68 @@ bool IndividualProgression::isBeforeProgression(Player* player, ProgressionState
         return false;
 
     return sIndividualProgression->GetPlayerProgressionFromQuests(player) < state;
+}
+
+bool IndividualProgression::isDungeonLockedByProgression(Player* player, uint32 mapId)
+{
+    if (!enabled || !player || !player->IsInWorld() || player->IsGameMaster() || !isNormalAccount(player))
+        return false;
+
+    if (mapId == MAP_BLACKWING_LAIR && !hasPassedProgression(player, PROGRESSION_MOLTEN_CORE))
+        return true;
+
+    if (mapId == MAP_ZUL_GURUB)
+        return GetPlayerProgressionFromQuests(player) < static_cast<ProgressionState>(RequiredZulGurubProgression);
+
+    if ((mapId == MAP_AHN_QIRAJ_TEMPLE || mapId == MAP_RUINS_OF_AHN_QIRAJ) &&
+        !hasPassedProgression(player, PROGRESSION_PRE_AQ))
+        return true;
+
+    if (mapId == MAP_ZUL_AMAN)
+        return GetPlayerProgressionFromQuests(player) < static_cast<ProgressionState>(RequiredZulAmanProgression);
+
+    if ((mapId == MAP_TEMPEST_KEEP || mapId == MAP_COILFANG_SERPENTSHRINE_CAVERN) &&
+        !hasPassedProgression(player, PROGRESSION_TBC_TIER_1))
+        return true;
+
+    if ((mapId == MAP_THE_BATTLE_FOR_MOUNT_HYJAL || mapId == MAP_BLACK_TEMPLE) &&
+        !hasPassedProgression(player, PROGRESSION_TBC_TIER_2))
+        return true;
+
+    if ((mapId == MAP_MAGISTERS_TERRACE || mapId == MAP_THE_SUNWELL) &&
+        !hasPassedProgression(player, PROGRESSION_TBC_TIER_4))
+        return true;
+
+    if (mapId == MAP_ULDUAR && !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_1))
+        return true;
+
+    if ((mapId == MAP_TRIAL_OF_THE_CHAMPION || mapId == MAP_TRIAL_OF_THE_CRUSADER) &&
+        !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_2))
+        return true;
+
+    if ((mapId == MAP_ICECROWN_CITADEL || mapId == MAP_THE_FORGE_OF_SOULS) &&
+        !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3))
+        return true;
+
+    if (mapId == MAP_THE_RUBY_SANCTUM && !hasPassedProgression(player, PROGRESSION_WOTLK_TIER_4))
+        return true;
+
+    InstanceTemplate const* instanceTemplate = sObjectMgr->GetInstanceTemplate(mapId);
+    if (!instanceTemplate)
+        return false;
+
+    if (instanceTemplate->Parent == MAP_OUTLAND && !hasPassedProgression(player, PROGRESSION_PRE_TBC))
+        return true;
+
+    if (instanceTemplate->Parent == MAP_NORTHREND && mapId != MAP_NAXXRAMAS &&
+        !hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
+        return true;
+
+    if (instanceTemplate->Parent == MAP_NORTHREND && mapId == MAP_NAXXRAMAS && player->GetLevel() <= 70 &&
+        (!isAttuned(player) || hasPassedProgression(player, PROGRESSION_TBC_TIER_5)))
+        return true;
+
+    return false;
 }
 
 void IndividualProgression::UpdateProgressionState(Player* player, ProgressionState newState) const
@@ -850,7 +914,6 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 
     TeamId teamId = player->GetTeamId(true);
     uint32 kills = player->GetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS);
-    uint16 playerGUID = player->GetGUID().GetCounter();
     const uint32 PVP_QUEST = 66100;
 
     IppPvPTitles const pvpTitlesList[14] =
@@ -899,46 +962,24 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 		}
 	}
 
-	for (int8_t i = 13; i > -1; --i)
+    // Keep this idempotent: do not delete achievements here, only ensure missing
+    // hidden PvP quest markers are granted once up to the current highest rank.
+    if (highestRank < 0)
+        return;
+
+    for (uint8 questIndex = 1; questIndex <= uint8(highestRank + 1); ++questIndex)
     {
-		uint32_t achievementId = AchievementData[i].TitleId[teamId];
-
-		if (highestRank == i || !player->HasAchieved(achievementId))
-			continue;
-
-		RemovePlayerAchievement(playerGUID, achievementId);
-    }
-
-	// remove all hidden pvp quests
-    for (uint8 i = 1; i <= 14; ++i)
-    {
-        uint32 questId = PVP_QUEST + i;
-
+        uint32 questId = PVP_QUEST + questIndex;
         if (player->GetQuestStatus(questId) == QUEST_STATUS_REWARDED)
-            player->RemoveRewardedQuest(questId);
-    }
+            continue;
 
-    uint8 i = 1;
+        Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
+        if (!quest)
+            continue;
 
-    // add hidden pvp quests
-    for (IppPvPTitles title : pvpTitlesList)
-    {
-        if (player->HasTitle(title.TitleId))
-        {
-		    for (uint8 j = 1; j <= i; ++j)
-            {
-                uint32 questId = PVP_QUEST + j;
-                Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
-
-                if (quest)
-                {
-                    player->AddQuest(quest, nullptr);
-                    player->CompleteQuest(questId);
-                    player->RewardQuest(quest, 0, player, false, false);
-                }
-            }
-        }
-		++i;
+        player->AddQuest(quest, nullptr);
+        player->CompleteQuest(questId);
+        player->RewardQuest(quest, 0, player, false, false);
     }
 }
 
@@ -977,7 +1018,8 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
         {
             if (kills >= title.RequiredKills)
             {
-                player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
+                if (!player->HasTitle(title.TitleId))
+                    player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
                 highestTitle = title.TitleId;
 					
                 constexpr int ALLIANCE_PVP_RANK_OFFSET = 4; // rank 1-4 are not used, need to add 4 to align with rank 1 = title ID 5
@@ -1065,6 +1107,7 @@ private:
         sIndividualProgression->VanillaPvpTitlesEarnPostVanilla = sConfigMgr->GetOption<bool>("IndividualProgression.VanillaPvpEarnTitlesAfterVanilla", false);
         sIndividualProgression->BotAccountsEarnPvPTitles = sConfigMgr->GetOption<bool>("IndividualProgression.BotAccountsEarnPvPTitles", false);
         sIndividualProgression->DisableRDF = sConfigMgr->GetOption<bool>("IndividualProgression.DisableRDF", false);
+        sIndividualProgression->DebugLFG = sConfigMgr->GetOption<bool>("IndividualProgression.DebugLFG", false);
         sIndividualProgression->DisableQuestMarkers = sConfigMgr->GetOption<bool>("IndividualProgression.DisableQuestMarkers", true);
         sIndividualProgression->MaxMonsterSight = sConfigMgr->GetOption<bool>("IndividualProgression.MaxMonsterSight", true);
         sIndividualProgression->BotOnlyAdjustments = sConfigMgr->GetOption<bool>("IndividualProgression.BotOnlyAdjustments", false);
@@ -1131,8 +1174,35 @@ public:
     }
 };
 
+class IndividualPlayerProgressionGlobalScript : public GlobalScript
+{
+public:
+    IndividualPlayerProgressionGlobalScript() : GlobalScript("IndividualPlayerProgressionGlobalScript") { }
+
+    void OnInitializeLockedDungeons(Player* player, uint8& /*level*/, uint32& lockData,
+        lfg::LFGDungeonData const* dungeon) override
+    {
+        if (!dungeon || dungeon->type == lfg::LFG_TYPE_RANDOM || lockData)
+            return;
+
+        if (!sIndividualProgression->isDungeonLockedByProgression(player, dungeon->map))
+            return;
+
+        lockData = lfg::LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+
+        if (sIndividualProgression->DebugLFG)
+        {
+            LOG_INFO("module.individual-progression",
+                "LFG progression lock: player='{}' dungeonId={} mapId={} playerStage={}",
+                player->GetName(), dungeon->id, dungeon->map,
+                sIndividualProgression->GetPlayerProgressionFromQuests(player));
+        }
+    }
+};
+
 // Add all scripts in one
 void AddSC_mod_individual_progression()
 {
+    new IndividualPlayerProgressionGlobalScript();
     new IndividualPlayerProgression_WorldScript();
 }

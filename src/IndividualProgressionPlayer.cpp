@@ -863,14 +863,6 @@ public:
         sIndividualProgression->CheckAdjustments(player);
     }
 
-    void OnPlayerUpdateZone(Player* player, uint32 /*newZone*/, uint32 newArea) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld() || !newArea)
-            return;
-
-        sIndividualProgression->checkIPPhasing(player, newArea);
-    }
-
     void OnPlayerUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
     {
         if (!player || !player->IsInWorld() || !newArea || !oldArea)

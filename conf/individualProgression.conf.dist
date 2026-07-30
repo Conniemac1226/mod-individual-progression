@@ -226,6 +226,15 @@ IndividualProgression.DisableQuestMarkers = 1
 #
 IndividualProgression.DisableRDF = 0
 
+# IndividualProgression.DebugLFG
+#
+#        Description: Enable logging when Individual Progression locks a dungeon in the LFG tool.
+#
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+IndividualProgression.DebugLFG = 0
+
 # IndividualProgression.AlteracValley
 #
 #        Description: Number of Armor Scraps quest TURN-INS (20 scraps each) a team needs before its graveyard defenders upgrade to the next tier.
