@@ -304,6 +304,18 @@ IndividualProgression.RepeatableVanillaQuestsXP = 1
 #
 IndividualProgression.ProgressionLimit = 0
 
+# IndividualProgression.AutomaticExpansionCaps
+#
+#        Description: Use ProgressionLimit as the single expansion control for
+#                     bot maximum levels and compatible bot modules.
+#                     Stages 1-7 = level 60, 8-12 = level 70, 13+ = level 80.
+#                     MaxPlayerLevel in worldserver.conf must remain 80.
+#
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+IndividualProgression.AutomaticExpansionCaps = 0
+
 # IndividualProgression.StartingProgression
 #
 #        Description: If enabled, players will begin at this progression stage.
