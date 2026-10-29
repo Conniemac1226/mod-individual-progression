@@ -68,6 +68,14 @@ public:
         }
     }
 
+    void OnPlayerGetTrainerSpellState(Player const* player, uint32 /*trainerId*/, uint32 spellId, Trainer::SpellState& state) override
+    {
+        if (!player || !player->IsInWorld())
+            return;
+
+        sIndividualProgression->TrainerRNDbotSpellsUnlock(player, spellId, state);
+    }
+
     void OnPlayerEquip(Player* player, Item* /*it*/, uint8 /*bag*/, uint8 /*slot*/, bool /*update*/) override
     {
         if (!player || !player->IsInWorld())

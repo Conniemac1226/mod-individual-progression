@@ -459,7 +459,7 @@ bool IndividualProgression::isExcludedAccount(uint32 accountId)
     return GetAccountMatch(accountId).excluded;
 }
 
-bool IndividualProgression::isBotAccount(Player* player)
+bool IndividualProgression::isBotAccount(const Player* player)
 {
     if (!player)
         return false;
@@ -1231,7 +1231,6 @@ public:
         if (sIndividualProgression->simpleConfigOverride)
         {
             sWorld->setIntConfig(CONFIG_WATER_BREATH_TIMER, 60000);
-            sWorld->setBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED, true);
             sWorld->setBoolConfig(CONFIG_LOW_LEVEL_REGEN_BOOST, false);
             sWorld->setBoolConfig(CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES, false);
         }

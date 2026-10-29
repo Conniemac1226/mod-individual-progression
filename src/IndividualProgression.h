@@ -429,7 +429,7 @@ public:
     bool hasCustomProgressionValue(uint32 creatureEntry);
     bool isExcludedAccount(Player* player);
     bool isExcludedAccount(uint32 accountId);
-    bool isBotAccount(Player* player);
+    bool isBotAccount(const Player* player);
     bool isBotAccount(uint32 accountId);
     bool isNormalAccount(Player* player);
     void LoadAccountRegexes();
@@ -443,6 +443,7 @@ public:
     void UpdateProgressionAchievements(Player* player, uint16 achievementID);
     void UpdateGroupAttunement(Player* player, std::string location);
     void UpdateRNDbotSpells(Player* player);
+    void TrainerRNDbotSpellsUnlock(Player const* player, uint32 spellId, Trainer::SpellState& state);
     void checkKillProgression(Player* player, Creature* killed);
     bool checkCustomKillProgression(Player* killer, Creature* killed);
 	void UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player);
